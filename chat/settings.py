@@ -1,10 +1,18 @@
 from pathlib import Path
-
+import dj_database_url
+import os 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'ABC1234' #TODO Changeme
-DEBUG = True
-ALLOWED_HOSTS = ['*']
+SECRET_KEY = 'ABC1234'
+#SECRET_KEY = os.environ.get('SECRET_KEY')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+
+ #TODO Changeme
+DEBUG = False
+ALLOWED_HOSTS = ['0.0.0.0','localhost','127.0.0.1','instant-messenger-2.herokuapp.com','instant-messenger-1.herokuapp.com',
+'arcane-sea-39026.herokuapp.com'
+]
 
 
 
@@ -15,6 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'whitenoise.runserver_nostatic',
 
     # Apps
     'core',
@@ -65,6 +74,9 @@ DATABASES = {
     }
 }
 
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
+
 AUTH_PASSWORD_VALIDATORS = []
 
 LANGUAGE_CODE = 'en-us'
@@ -78,10 +90,21 @@ STATIC_URL = '/static/'
 
 # Custom variables
 # ----------------
-STATIC_ROOT = BASE_DIR / 'run' / 'static_root'
+#STATIC_ROOT = BASE_DIR / 'run' / 'static_root'
 
-MEDIA_ROOT = BASE_DIR / 'run' /'media'
+#STATIC_URL = '/static/'
+#location where django collect all static files
+STATIC_ROOT = os.path.join(BASE_DIR,'static')
+# location where you will store your static files
+STATICFILES_DIRS = [os.path.join(BASE_DIR,'core/static')
+]
+
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
+
+
+#MEDIA_ROOT = BASE_DIR / 'run' /'media'
+#MEDIA_URL = '/media/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
